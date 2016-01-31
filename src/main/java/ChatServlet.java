@@ -74,6 +74,7 @@ public class ChatServlet extends JettySocketIOServlet
                         final ScheduledFuture<?> discoverHandle =
                                 scheduler.scheduleAtFixedRate(new Runnable()
                                 {
+                                    private int counter = 0;
                                     @Override
                                     public void run()
                                     {
@@ -81,14 +82,15 @@ public class ChatServlet extends JettySocketIOServlet
                                         {
                                             socket.emit("status", createStatusObject("Discovering...",
                                                     true,
-                                                    "Abracadabra!", 1, "working..."));
+                                                    "Abracadabra... " + counter  , 1, "working..."));
+                                            counter++;
                                         }
                                         catch (SocketIOException e)
                                         {
                                             e.printStackTrace();
                                         }
                                     }
-                                }, 10, 10, TimeUnit.SECONDS);
+                                }, 0, 1, TimeUnit.SECONDS);
                         scheduler.schedule(new Runnable()
                         {
                             public void run()
@@ -105,7 +107,7 @@ public class ChatServlet extends JettySocketIOServlet
                                     e.printStackTrace();
                                 }
                             }
-                        }, 60 * 60, TimeUnit.SECONDS);
+                        }, 20, TimeUnit.SECONDS);
 
                         return null;
                     }

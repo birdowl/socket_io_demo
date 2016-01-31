@@ -7,13 +7,12 @@ $(function () {
     var input = $('#input');
     var status = $('#status');
     var myName = false;
-    var logged = false;
-    var loginurl = "";
-    var pathname = document.location.pathname;
-    var lastdot = pathname.lastIndexOf("/");
-    if (lastdot > 1) {
-        loginurl = pathname.substr(1, lastdot);
-    }
+
+    var discoverBtn = $('#discoverBtn');
+    var discoverMessage = $('#discoverMessage');
+    var discoverStatus = $('#discoverStatus');
+    var discoverProgress = $('#discoverProgress');
+
     // uncomment the following line to make this application connect to http://lab.happygears.net:8080/socket.io
     // var socket = io.connect('http://lab.happygears.net:8080/', {'resource': 'socket.io'});   //  {'resource':loginurl + 'socket.io'});
 
@@ -32,6 +31,27 @@ $(function () {
             content.html($('<p>', { text: 'Sorry, but there\'s some problem with your '
                 + 'socket or the server is down' }));
         });
+
+    discoverBtn.click(function(e) {
+        socket.emit('discover');
+    });
+
+    socket.on('status', function(status) {
+        discoverBtn.html(status.buttonText);
+        discoverMessage.html(status.message);
+        discoverStatus.html(status.statusMessage);
+
+        if(status.statusCode == 0)
+            discoverStatus.removeClass('progress').addClass('success');
+        else
+        if(status.statusCode == 1)
+           discoverStatus.removeClass('success').addClass('progress');
+
+        if(status.operationInProgress)
+            discoverProgress.show();
+        else
+            discoverProgress.hide();
+    });
 
     input.keydown(function(e) {
         if (e.keyCode === 13) {
@@ -73,6 +93,7 @@ $(function () {
             + (datetime.getMinutes() < 10 ? '0' + datetime.getMinutes() : datetime.getMinutes())
             + ': ' + message + '</p>');
     }
+
 });
 
 })
