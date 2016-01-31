@@ -127,19 +127,45 @@ public class ChatServlet extends JettySocketIOServlet
         return map;
     }
 
-    private static Map<String, Object> createStatusObject(String buttonText,
-                                                          boolean operationInProgress,
-                                                          String message,
-                                                          int statusCode,
-                                                          String statusMessage)
-    {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("buttonText", buttonText);
-        map.put("operationInProgress", operationInProgress);
-        map.put("message", message);
-        map.put("statusCode", statusCode);
-        map.put("statusMessage", statusMessage);
 
-        return map;
+//    private static Map<String, Object> createStatusObject(String buttonText,
+//                                                          boolean operationInProgress,
+//                                                          String message,
+//                                                          int statusCode,
+//                                                          String statusMessage)
+//    {
+//        Map<String, Object> map = new LinkedHashMap<>();
+//        map.put("buttonText", buttonText);
+//        map.put("operationInProgress", operationInProgress);
+//        map.put("message", message);
+//        map.put("statusCode", statusCode);
+//        map.put("statusMessage", statusMessage);
+//
+//        return map;
+//    }
+
+    public static class StatusSIOEvent {
+        public String buttonText;
+        public boolean operationInProgress;
+        public String message;
+        public int statusCode;
+        public String statusMessage;
+    }
+
+    private static StatusSIOEvent createStatusObject(String buttonText,
+                                                     boolean operationInProgress,
+                                                     String message,
+                                                     int statusCode,
+                                                     String statusMessage)
+    {
+        StatusSIOEvent event = new StatusSIOEvent();
+
+        event.buttonText = buttonText;
+        event.operationInProgress = operationInProgress;
+        event.message = message;
+        event.statusCode = statusCode;
+        event.statusMessage = statusMessage;
+
+        return event;
     }
 }
